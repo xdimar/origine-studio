@@ -1,0 +1,63 @@
+datasource db {
+  provider = "postgresql" // <-- UBAH INI
+  url      = env("DATABASE_URL")
+}
+
+// Ini adalah generator Prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+}
+
+// Tabel Layanan (Untuk menyimpan 19 layananmu nanti)
+model Service {
+  id               Int      @id @default(autoincrement())
+  name             String
+  category         String
+  price            Int
+  discount       Int      @default(0) // 
+  durationMinutes  Int
+  description      String
+  maxPax           Int      @default(1)
+  createdAt        DateTime @default(now())
+}
+
+// Tabel Booking (Untuk menyimpan pesanan klien)
+model Booking {
+  id             Int      @id @default(autoincrement())
+  customerName   String
+  customerEmail  String
+  password       String   // <-- TAMBAHKAN INI
+  customerPhone  String
+  bookingDate    String   // Format: YYYY-MM-DD
+  bookingTime    String   // Format: HH:mm
+  paymentMethod  String   // "DP" atau "TEMPAT"
+  status         String   @default("PENDING") // PENDING, CONFIRMED, COMPLETED
+  totalPrice     Int
+  serviceId      Int
+  createdAt      DateTime @default(now())
+  gdriveLink     String?  // Tambahkan baris ini (Tanda ? berarti boleh kosong)
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+}
+
+model Holiday {
+  id          Int      @id @default(autoincrement())
+  date        String   @unique // Format: YYYY-MM-DD
+  description String?
+  createdAt   DateTime @default(now())
+}
+
+model TimeSlot {
+  id    Int    @id @default(autoincrement())
+  time  String @unique // Format: HH:mm (contoh: "10:00", "10:30")
+}
